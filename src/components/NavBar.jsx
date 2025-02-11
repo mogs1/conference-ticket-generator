@@ -1,20 +1,19 @@
-import { useState } from "react"
 import { NavLink } from "react-router-dom"
 import "./NavBar.css"
 import logo from "../assets/logo.png"
 import arrow from "../assets/line.svg"
 
 const NavBar = () => {
-    const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <nav className="flex max-w-[1200px] mx-auto py-3 px-4 justify-between items-center 
-                    rounded-3xl border border-[#197686] bg-[#05252c40] backdrop-blur-[2px]">
+    <nav className="flex max-w-[1200px] mx-auto py-3 px-4 justify-between items-center font-[JejuMyeongjo] 
+                    rounded-3xl border border-[#197686] bg-[#05252c66] backdrop-blur-[2px]">
       <img 
       src={logo} 
       alt="Logo" />
 
-      <ul className="sm:flex items-center gap-4 text-[#B3B3B3] cursor-pointer hidden">
+      <ul className="sm:flex items-center gap-4 text-[#B3B3B3] cursor-pointer hidden
+                      text-lg font-normal">
         <li>
             <NavLink to={'/'}>
             Events
