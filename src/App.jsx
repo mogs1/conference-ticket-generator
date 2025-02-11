@@ -9,7 +9,7 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <div className="py-5">
+    <div className="p-5">
       <Router>
         <NavBar />
 

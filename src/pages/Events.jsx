@@ -46,12 +46,12 @@ const Events = () => {
 
   return (
     <FormProvider {...details}>
-    <div className="max-w-[700px] mx-auto p-12 bg-[#041E23] rounded-[40px] border border-[#0E464F] shadow-lg">
+    <div className="max-w-[700px] mx-auto mt-6 p-12 bg-[#041E23] rounded-[40px] border border-[#0E464F] shadow-lg">
       {/* Header for each Steps */}
-      <header className='flex justify-between items-center text-white'>
+      <header className='flex flex-col sm:flex-row justify-start sm:justify-between sm:items-center mb-1.5 text-white'>
         <h1 className='text-[32px] font-[JejuMyeongjo]'>{header}</h1>
 
-        <div className="flex justify-between mt-2 font-[roboto] 
+        <div className="flex justify-between sm:mt-2 font-[roboto] 
                         text-[16px]/[24px] text-[#FAFAFA]">
           <span>Step {step} / 3</span>
         </div>
@@ -71,8 +71,8 @@ const Events = () => {
       {/* Step Content */}
       <form onSubmit={details.handleSubmit(onSubmit)}>
           {step === 1 && <TicketSelection />}
-          {step === 2 && <AttendeeDetail />}
-          {step === 3 && <ConfirmationStep setStep={setStep} />}
+          {step === 2 && <AttendeeDetails  setStep={setStep}/>}
+          {/* {step === 3 && <ConfirmationStep setStep={setStep} />} */}
         </form>
     </div>
     </FormProvider>

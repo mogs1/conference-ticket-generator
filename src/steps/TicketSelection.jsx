@@ -12,7 +12,7 @@ const TicketSelection = () => {
   const selectedTicket = watch('ticketType')
 
   const selectedButtons = [
-    {type: 'button', name: 'Cancel' },
+    {type: 'reset', name: 'Cancel' },
     {type: 'submit', name: 'Next' },
   ]
 
@@ -73,7 +73,7 @@ const TicketSelection = () => {
         </select>
       </div>
 
-      <div className="flex justify-center items-center p-3 gap-8 self-stretch
+      <div className="flex flex-col sm:flex-row justify-center items-center p-3 gap-8 self-stretch
                      bg-[#041E23] border border-[#0E464F] rounded-3xl">
        {selectedButtons.map((button) =>
        <button
