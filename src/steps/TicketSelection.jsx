@@ -42,10 +42,10 @@ const TicketSelection = () => {
           <div 
             key={ticket.type}
             onClick={() => setValue('ticketType', ticket.type)}
-            className={`flex items-start justify-center w-full p-3 gap-3 border rounded-xl cursor-pointer transition-all
+            className={`flex items-start justify-center w-full p-3 gap-3 border border-[#197686] rounded-xl cursor-pointer transition-all
               ${selectedTicket === ticket.type 
-                ? 'border-[#197686] bg-[#197686]' 
-                : 'border-gray-200 hover:border-blue-200'}`}
+                ? 'bg-[#197686]' 
+                : 'hover:bg-[#2C545B]'}`}
           >
             <div className="flex flex-col-reverse w-full">
               <div className='flex flex-col items-start gap-1 '>

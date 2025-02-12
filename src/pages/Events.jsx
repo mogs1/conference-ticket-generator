@@ -3,6 +3,7 @@ import {  useForm, FormProvider } from 'react-hook-form'
 import TicketSelection from '../steps/TicketSelection';
 import AttendeeDetails from '../steps/AttendeeDetails';
 import ConfirmationStep from '../steps/ConfirmationStep';
+import { saveToIndexDB } from '../database/indexDB'
 
 const Events = () => {
   const [step, setStep] = useState(1);
