@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { Download } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import Ticket from '../components/Ticket';
-import { saveToIndexDB } from "../database/indexDB";
+import { saveToIndexDB, } from "../database/indexDB";
 
 
 const ConfirmationStep = ({ setStep }) => {
@@ -30,6 +30,8 @@ const ConfirmationStep = ({ setStep }) => {
     try {
       const ticketElement = document.getElementById('ticket-container');
   
+      if(!ticketElement) return
+      
       const loadImages = () => {
         return new Promise((resolve) => {
           const images = ticketElement.getElementsByTagName('img');
@@ -53,12 +55,11 @@ const ConfirmationStep = ({ setStep }) => {
       const canvas = await html2canvas(ticketElement, {
         scale: 2, 
         useCORS: true, 
-        logging: false,
         backgroundColor: null, 
       });
   
       const link = document.createElement('a');
-      link.download = `techember-ticket-${formData.ticketId || 'ticket'}.png`;
+      link.download = `techember-ticket.png`;
       link.href = canvas.toDataURL('image/png', 1.0);
       link.click();
   

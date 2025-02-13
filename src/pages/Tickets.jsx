@@ -8,8 +8,17 @@ const Tickets = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       const storedTickets = await getStoredTickets();
-      setTickets(storedTickets);
+      
+      const uniqueTicket = storedTickets.reduce((acc, ticket) => {
+        if (!acc.some(t => t.email === ticket.email)) {
+          acc.push(ticket);
+        }
+        return acc;
+      }, []);
+
+      setTickets(uniqueTicket);
     };
+
 
     fetchTickets();
   }, []);
