@@ -21,9 +21,41 @@ export const initDB = () => {
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['bookingData'], 'readwrite');
       const store = transaction.objectStore('bookingData');
-      const request = store.add(data);
+
+      const ticketData = {
+        ...data,
+        id: new Date().getTime(),
+      };
+
+      const request = store.add(ticketData);
   
       request.onsuccess = () => resolve(request.result);
       request.onerror = () => reject(request.error);
     });
   };
+
+  export const getStoredTickets = async () => {
+    const db = await initDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(['bookingData'], 'readonly');
+      const store = transaction.objectStore('bookingData');
+      const request = store.getAll();
+  
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  };
+  
+
+  export const clearTicketsFromDB = async () => {
+    const db = await initDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(['bookingData'], 'readwrite');
+      const store = transaction.objectStore('bookingData');
+      const request = store.clear();
+  
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  };
+  

@@ -1,4 +1,4 @@
-import { useState } from "react"
+
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
 import NavBar from "./components/NavBar"
 import Tickets from "./pages/Tickets"
@@ -6,10 +6,8 @@ import About from "./pages/About"
 import Events from "./pages/Events"
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="p-5">
+    <div className="p-5 overflow-x-hidden">
       <Router>
         <NavBar />
 

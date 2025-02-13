@@ -37,18 +37,21 @@ const Events = () => {
       case 1:
         setHeader("Ticket Selection")
         break
-      case 2:
-        setHeader("Attendee Details")
-        break
-      case 3:
-        setHeader("Ready")
+        case 2:
+          setHeader("Attendee Details")
+          break
+          case 3:
+            setHeader("Ready")
+            break
+            default:
+              setHeader("Ticket Selection")    
     }
   }, [step])
 
   return (
     <FormProvider {...details}>
     <div className="max-w-[700px] mx-auto mt-6 p-12 bg-[#041E23] rounded-[40px] border border-[#0E464F] shadow-lg">
-      {/* Header for each Steps */}
+
       <header className='flex flex-col sm:flex-row justify-start sm:justify-between sm:items-center mb-1.5 text-white'>
         <h1 className='text-[32px] font-[JejuMyeongjo]'>{header}</h1>
 
@@ -58,7 +61,6 @@ const Events = () => {
         </div>
       </header>
 
-      {/* Progress Bar */}
       <div className="mb-8">
         <div className="relative h-1 bg-[#0E464F] rounded-full self-stretch">
           <div 
@@ -66,14 +68,13 @@ const Events = () => {
             style={{ width: `${(step / 3) * 100}%` }}
           />
         </div>
-        
       </div>
 
       {/* Step Content */}
       <form onSubmit={details.handleSubmit(onSubmit)}>
           {step === 1 && <TicketSelection />}
           {step === 2 && <AttendeeDetails  setStep={setStep}/>}
-          {/* {step === 3 && <ConfirmationStep setStep={setStep} />} */}
+          {step === 3 && <ConfirmationStep setStep={setStep} />}
         </form>
     </div>
     </FormProvider>

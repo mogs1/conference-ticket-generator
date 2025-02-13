@@ -29,6 +29,10 @@ body {
   text-align: center;
   color: #FAFAFA;
 }
+
+.road_rage{
+  font-family: 'Road Rage';
+}
 /* button {
   border-radius: 8px;
   border: 1px solid transparent;

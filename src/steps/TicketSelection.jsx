@@ -21,7 +21,7 @@ const TicketSelection = () => {
       <div className="flex flex-col p-6 items-center gap-2 self-stretch rounded-3xl 
                       border-2 border-x-[#07373F] border-b-[#07373F] border-t-0 techemberColor">
         <h1 className="techemberFont">
-            Techember Fest '25
+            Techember Fest ''25
         </h1>
         <div className=' text-[#FAFAFA] max-w-xs text-center '>
         <p className="max-w-2xs mx-auto">

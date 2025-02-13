@@ -1,119 +1,157 @@
-import { useFormContext } from 'react-hook-form';
-import { useDropzone } from 'react-dropzone';
-import { useState } from 'react';
+import { useState } from "react";
+import { useFormContext } from "react-hook-form";
+import { Camera, Mail } from "lucide-react";
+import cld from "../config/cloudinary";
+import { fill } from "@cloudinary/url-gen/actions/resize";
+import { AdvancedImage } from "@cloudinary/react";
 
 const AttendeeDetails = ({ setStep }) => {
   const { register, formState: { errors }, setValue } = useFormContext();
-  const [preview, setPreview] = useState(null);
+  
+  const [preview, setPreview] = useState(null); 
+  const [uploadedPublicId, setUploadedPublicId] = useState(null);
   const [isHovering, setIsHovering] = useState(false);
 
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: {'image/*': []},
-    onDrop: ([file]) => {
-      if (file) {
-        setValue('profilePhoto', file);
-        setPreview(URL.createObjectURL(file));
+  const upload_preset = import.meta.env.VITE_UPLOAD_PRESET
+  const cloud_name = import.meta.env.VITE_CLOUD_NAME
+
+  // Function to upload image to Cloudinary
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", upload_preset); 
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+
+      
+      if (data.secure_url) {
+        setUploadedPublicId(data.public_id);
+        setValue("profilePhotoUrl", data.secure_url);
+        setPreview(data.secure_url); 
       }
+    } catch (error) {
+      console.error("Upload failed:", error);
     }
-  });
+  };
 
-  const selectedButtons = [
-    { type: 'button', name: 'Back', onClick: () => setStep(1) },
-    { type: 'submit', name: 'Get My Free Ticket' }
-  ];
+  // Handle file selection and upload
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0]; 
+    if (file) {
+      const objectURL = URL.createObjectURL(file); 
+      setPreview(objectURL); 
+      await uploadToCloudinary(file); 
+    }
+  };
 
+
+  const profileImage = uploadedPublicId
+    ? cld.image(uploadedPublicId).resize(fill().width(240).height(240))
+    : null;
+
+    const selectedButtons = [
+      { type: 'button', name: 'Back', onClick: () => setStep(1) },
+      { type: 'submit', name: 'Get My Free Ticket' }
+    ];
+
+    
   return (
     <div className="space-y-6">
-      {/* Photo Upload Section */}
       <div className="flex flex-col gap-8 px-6 pt-6 pb-12 border border-[#07373F] bg-[#052228] rounded-3xl">
         <h1 className="text-base/snug">Upload Profile Photo</h1>
 
         <div className="flex justify-center items-center h-[200px] self-stretch bg-[#00000033]">
-          <div 
-            {...getRootProps()}
+          <label 
+            htmlFor="fileInput"
+            className="relative flex flex-col justify-center items-center gap-4 p-6 text-center 
+                      w-[240px] h-[240px] bg-[#0E464F] border border-[#24a0b580] rounded-4xl 
+                      overflow-hidden cursor-pointer transition-all duration-300"
+            style={{
+              backgroundImage: preview ? `url(${preview})` : "none",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
-            className="relative"
           >
-            <input {...getInputProps()} />
-            <div className="flex flex-col justify-center items-center gap-4 p-6 text-center 
-                          w-[240px] h-[240px] bg-[#0E464F] border border-[#24a0b580] rounded-4xl
-                          overflow-hidden relative">
-              {preview ? (
-                <>
-                  <img 
-                    src={preview} 
-                    alt="Preview" 
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  {isHovering && (
-                    <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center">
-                      <div className="mx-auto h-12 w-12 text-center text-gray-400">📷</div>
-                      <p className="text-white">Click to change photo</p>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="absolute inset-0 w-full flex flex-col items-center justify-center cursor-pointer">
-                  <div className="mx-auto h-12 w-12 text-center text-gray-400">📷</div>
-                  <p>Drag & drop or click to upload</p>
-                </div>
-              )}
-            </div>
-          </div>
+            <input
+              id="fileInput"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+            />
+            
+            {!preview && (
+              <div className="flex flex-col items-center">
+                <Camera className="h-12 w-12 text-gray-400" />
+                <p>Click to upload</p>
+              </div>
+            )}
+
+            {preview && isHovering && (
+              <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center">
+                <Camera className="h-12 w-12 text-white" />
+                <p className="text-white">Want to change the image?</p>
+              </div>
+            )}
+          </label>
         </div>
       </div>
 
-      {/* Divider */}
-      <div className="bg-[#07373F] h-1 self-stretch" />
-
-      {/* Form Fields */}
       <div className="space-y-4">
         <div>
           <label htmlFor="name" className="block mb-2">Enter your name</label>
           <input
-            {...register('name', { required: 'Name is required' })}
-            name="name"
-            className="w-full p-3 border rounded-xl border-[#07373F] outline-none"
+            {...register("name", { required: "Name is required" })}
+            className="w-full p-3 border rounded-xl border-[#07373F] bg-[#052228] outline-none"
           />
-          {errors.name && (
-            <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-          )}
+          {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
         </div>
 
         <div>
           <label htmlFor="email" className="block mb-2">Enter your email*</label>
+          <div className="relative">
           <input
-            {...register('email', { 
-              required: 'Email is required',
+            {...register("email", { 
+              required: "Email is required",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address"
-              }
+                message: "Invalid email address",
+              },
             })}
-            placeholder="hello@avioflagos.io"
             type="email"
-            className="w-full p-3 border rounded-xl border-[#07373F] outline-none 
-                     placeholder:text-white"
+            placeholder="hello@techemberfest.com"
+            className="relative w-full p-3 pl-10 border rounded-xl border-[#07373F] bg-[#052228] outline-none 
+                      placeholder:text-white/70"
           />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-          )}
+          <Mail className="absolute inset-3" />
+          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+          </div>
         </div>
 
         <div>
           <label htmlFor="request" className="block mb-2">Special request?</label>
           <textarea
-            {...register('request')}
+            {...register("request")}
             placeholder="What's on your mind?"
             rows={4}
-            className="w-full p-3 border rounded-xl border-[#07373F] outline-none"
+            className="w-full p-3 border rounded-xl border-[#07373F] bg-[#052228] outline-none
+                      placeholder:text-white/70"
           />
         </div>
       </div>
-
-      {/* Buttons */}
-      <div className="flex flex-col sm:flex-row justify-center items-center p-3 gap-8 self-stretch
+      
+  <div className="flex flex-col sm:flex-row justify-center items-center p-3 gap-8 self-stretch
                     bg-[#041E23] border border-[#0E464F] rounded-3xl">
         {selectedButtons.map((button) => (
           <button
@@ -122,7 +160,7 @@ const AttendeeDetails = ({ setStep }) => {
             onClick={button.onClick}
             className="flex p-3 justify-center w-full items-center rounded-xl 
                      border border-[#24A0B5] transition-all duration-200
-                     hover:bg-[#24A0B5]"
+                     hover:bg-[#24A0B5] cursor-pointer"
           >
             {button.name}
           </button>
